@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json.schemastore.org/dotnetcli.host",
+  "symbolInfo": {
+    "ServiceName": {
+      "longName": "service-name",
+      "shortName": "sn"
+    },
+    "RootNamespace": {
+      "longName": "root-namespace",
+      "shortName": "rn"
+    },
+    "TargetFramework": {
+      "longName": "framework",
+      "shortName": "f"
+    },
+    "DatabaseProvider": {
+      "longName": "database",
+      "shortName": "db"
+    },
+    "EnableSwagger": {
+      "longName": "swagger",
+      "shortName": "sw"
+    },
+    "EnableDocker": {
+      "longName": "docker",
+      "shortName": "d"
+    },
+    "EnableSerilog": {
+      "longName": "serilog",
+      "shortName": "sl"
+    }
+  }
+}

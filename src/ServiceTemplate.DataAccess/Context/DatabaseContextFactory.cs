@@ -1,4 +1,3 @@
-using FR.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace ServiceTemplate.DataAccess.Context;

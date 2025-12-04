@@ -9,11 +9,9 @@ ARG BUILD_CONFIGURATION=Production
 # Теперь копируем все оставшиеся файлы и папки проекта
 COPY ./ /src/
 
-WORKDIR /src/Host
+WORKDIR /src/src/Host
 
 RUN dotnet restore "Host.csproj"
-
-WORKDIR /src/Host
 
 # Проверка содержимого appsettings.Production.json после установки секретов
 RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build

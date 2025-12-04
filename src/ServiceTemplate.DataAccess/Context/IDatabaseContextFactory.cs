@@ -1,4 +1,4 @@
-namespace FR.DataAccess.Context;
+namespace ServiceTemplate.DataAccess.Context;
 
 public interface IDatabaseContextFactory<T>
 {

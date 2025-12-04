@@ -26,8 +26,14 @@ public interface IBaseController<TDto, TUniqueIdentifier, in TDtoToCreate, in TD
     /// <returns>Return entity by id</returns>
     Task<ActionResult<TDto>> GetByIdAsync(TUniqueIdentifier id, CancellationToken ct = default);
 
+    /// <summary>
+    /// Create dto
+    /// </summary>
+    /// <param name="dtoToCreate">Entity with all fields</param>
+    /// <param name="ct">Cancellation token</param>
+    /// <returns>Created entity</returns>
     Task<ActionResult<TDto>> CreateAsync(TDtoToCreate dtoToCreate, CancellationToken ct = default);
-    
+
     /// <summary>
     /// Update dto
     /// </summary>

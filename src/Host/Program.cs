@@ -1,6 +1,6 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
-using FR.DataAccess.Context;
+using ServiceTemplate.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -80,8 +80,8 @@ if (swaggerConfig is { IsEnabled: true })
         options.SwaggerDoc("v1", new OpenApiInfo
         {
             Version = "v1",
-            Title = $"Swagger of Template service",
-            Description = "Swagger of Template service build with .NET CORE 8.0"
+            Title = $"Swagger of ServiceTemplate service",
+            Description = "Swagger of ServiceTemplate service build with .NET CORE 8.0"
         });
         options.EnableAnnotations();
         options.SupportNonNullableReferenceTypes();

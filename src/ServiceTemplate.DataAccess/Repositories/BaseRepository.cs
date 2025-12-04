@@ -1,5 +1,4 @@
-﻿using FR.DataAccess.Context;
-using ServiceTemplate.DataAccess.Context;
+﻿using ServiceTemplate.DataAccess.Context;
 
 namespace ServiceTemplate.DataAccess.Repositories
 {

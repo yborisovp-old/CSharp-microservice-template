@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json.schemastore.org/ide.host",
+  "icon": "icon.png",
+  "learnMoreLink": "https://github.com/yborisovp/CSharp-microservice-template",
+  "symbolInfo": {
+    "ServiceName": {
+      "isVisible": "true"
+    },
+    "RootNamespace": {
+      "isVisible": "true"
+    },
+    "TargetFramework": {
+      "isVisible": "true"
+    },
+    "DatabaseProvider": {
+      "isVisible": "true"
+    },
+    "EnableSwagger": {
+      "isVisible": "true"
+    },
+    "EnableDocker": {
+      "isVisible": "true"
+    },
+    "EnableSerilog": {
+      "isVisible": "true"
+    }
+  }
+}

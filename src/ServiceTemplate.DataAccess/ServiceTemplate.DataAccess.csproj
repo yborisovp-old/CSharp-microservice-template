@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>ServiceTemplate.DataAccess</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="EFCore.NamingConventions" Version="8.0.3" />
@@ -17,10 +18,10 @@
         <PackageReference Include="Toolbelt.EntityFrameworkCore.IndexAttribute" Version="5.0.1.1" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Context\ModelsConfiguration\" />
-      <Folder Include="Interfaces\" />
-      <Folder Include="Migrations\SQL\" />
-      <Folder Include="Models\" />
+        <Folder Include="Context\ModelsConfiguration\" />
+        <Folder Include="Interfaces\" />
+        <Folder Include="Migrations\SQL\" />
+        <Folder Include="Models\" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-# C# Microservice Template
+# $(ServiceName) Microservice
 
 This repository offers a foundational C# microservice template designed to streamline the development of scalable and efficient microservices. It provides a structured framework that adheres to best practices, facilitating rapid deployment and maintainability.
 
@@ -31,17 +31,19 @@ Here’s a diagram illustrating the structure of this repository:
 ```mermaid
 graph TD;
     
-    subgraph Host_Application ["Host application"]
-        Host["Host"]
-    end
+    subgraph Src_Folder ["src/ folder"]
+        subgraph Host_Application ["Host application"]
+            Host["$(ServiceName)"]
+        end
 
-    subgraph NuGet_Packages ["NuGet source"]
-        DataContracts["DataContracts (NuGet)"]
-        DataAccess["DataAccess (NuGet)"]
+        subgraph NuGet_Packages ["NuGet source"]
+            DataContracts["$(ServiceName).DataContracts (NuGet)"]
+            DataAccess["$(ServiceName).DataAccess (NuGet)"]
+        end
+        
+        Host -->|local| DataContracts
+        Host -->|local| DataAccess
     end
-    
-    Host -->|local| DataContracts
-    Host -->|local| DataAccess
     
     subgraph Other_Services ["Some external C# services"]
         OtherService1["Service 1"]
@@ -54,26 +56,32 @@ graph TD;
 
 ## **Getting Started:**
 	
-1.	Clone the Repository
+1.	Install the template
 ```sh
-git clone https://github.com/yborisovp/CSharp-microservice-templete.git
+dotnet new --install <path-to-template>
 ```
 
-2.	Navigate to the Project Directory
+2.	Create a new project from template
+```sh
+dotnet new microservice -n $(ServiceName) --root-namespace $(RootNamespace)
+```
+
+3.	Navigate to the Project Directory
  ```sh
- cd CSharp-microservice-templete
+ cd $(ServiceName)
 ```
 
-3.	Build the Solution
+4.	Build the Solution
 
 ```sh
 dotnet build
 
 ```
 
-4.	Run the Application
+5.	Run the Application
 
 ```sh
+cd src/Host
 dotnet run
 ```
 
