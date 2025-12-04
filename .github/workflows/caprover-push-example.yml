@@ -1,39 +1,72 @@
-name: Push to CapRover example
-env:
-  DockerContainer: 'template'
-on:
-  workflow_dispatch: 
-    
-jobs:
+name: Deploy to CapRover
 
-  build:
-    runs-on: ubuntu-latest  # For a list of available runner types, refer to
-    # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+# Example workflow for building Docker image and deploying to CapRover
+# This workflow requires the following secrets to be configured:
+# - DOCKERHUB_USERNAME: Docker Hub username
+# - DOCKERHUB_TOKEN: Docker Hub access token
+# - CAPROVER_SERVER: CapRover server URL
+# - APP_NAME: CapRover application name
+# - APP_TOKEN: CapRover application token
+# - DB_USER: Database username (optional, for build secrets)
+# - DB_PASSWORD: Database password (optional, for build secrets)
+# - DB_SERVER: Database server (optional, for build secrets)
+# - DB_DATABASE: Database name (optional, for build secrets)
+
+env:
+  DOCKER_CONTAINER: 'template'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for Dockerfile
+        run: |
+          if [ ! -f "Dockerfile" ]; then
+            echo "Error: Dockerfile not found in repository root"
+            exit 1
+          fi
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log into Docker Hub
+      - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_CONTAINER }}
+          tags: |
+            type=raw,value=latest
+
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
+          context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{env.DockerContainer}}:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           secrets: |
-            "secret_user=${{ secrets.DB_USER }}"
-            "secret_password=${{ secrets.DB_PASSWORD }}"
-            "secret_server=${{ secrets.DB_SERVER }}"
-            "secret_database=${{ secrets.DB_DATABASE }}"
+            secret_user=${{ secrets.DB_USER }}
+            secret_password=${{ secrets.DB_PASSWORD }}
+            secret_server=${{ secrets.DB_SERVER }}
+            secret_database=${{ secrets.DB_DATABASE }}
 
-      - name: Deploy Image to CapRrover
+      - name: Deploy to CapRover
         uses: caprover/deploy-from-github@v1.1.2
         with:
-          server: "${{ secrets.CAPROVER_SERVER }}"
-          app: "${{ secrets.APP_NAME }}"
-          token: "${{ secrets.APP_TOKEN }}"
-          image:  ${{ secrets.DOCKERHUB_USERNAME }}/${{env.DockerContainer}}:latest
+          server: ${{ secrets.CAPROVER_SERVER }}
+          app: ${{ secrets.APP_NAME }}
+          token: ${{ secrets.APP_TOKEN }}
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DOCKER_CONTAINER }}:latest

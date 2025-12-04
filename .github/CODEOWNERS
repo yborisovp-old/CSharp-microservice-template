@@ -1,0 +1,32 @@
+# This file defines code owners for automatic PR review assignment
+
+# Each line is a file pattern followed by one or more owners
+
+# Order is important; the last matching pattern takes precedence
+
+# More info: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for the entire repository
+
+# Uncomment and add your team members' GitHub usernames
+
+\* @yborisovp
+
+# GitHub workflows
+
+/.github/workflows/ @
+
+# Documentation
+
+/docs/ @
+/README.md @
+
+# Configuration files
+
+_.yml @
+_.yaml @
+\*.json @
+
+# Source code
+
+/src/ @

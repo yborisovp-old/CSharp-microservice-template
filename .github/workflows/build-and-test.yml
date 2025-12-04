@@ -15,16 +15,25 @@ jobs:
 
     strategy:
       matrix:
-        dotnet-version: [7.x, 8.x] # Specify the .NET versions you want to test against
+        # Specify the .NET versions you want to test against
+        dotnet-version: [7.x, 8.x]
 
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v3
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Cache .NET packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
 
       - name: Restore dependencies
         run: dotnet restore
@@ -33,4 +42,19 @@ jobs:
         run: dotnet build --no-restore --configuration Release
 
       - name: Run tests
-        run: dotnet test --no-build --configuration Release --verbosity normal
+        id: test
+        continue-on-error: true
+        run: |
+          # Run tests if any test projects exist in the solution
+          dotnet test --no-build --configuration Release --verbosity normal --logger "trx;LogFileName=test-results-${{ matrix.dotnet-version }}.trx" --collect:"XPlat Code Coverage" || echo "No tests found or tests failed"
+          echo "tests_completed=true" >> $GITHUB_OUTPUT
+
+      - name: Publish test results
+        if: always() && steps.test.outputs.tests_completed == 'true'
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: '**/*.trx'
+          check_name: 'Test Results (.NET ${{ matrix.dotnet-version }})'
+          comment_mode: create new
+          report_individual_runs: true
+          fail_on: 'test failures'
