@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
-using ServiceTemplate.DataAccess.Context;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -40,8 +39,6 @@ builder.Services.AddHealthChecks();
 
 var databaseConfig = baseConfiguration.DatabaseConfig;
 builder.Services.AddDbContext<DatabaseContext>(options => DatabaseContextFactory.CreateDbContext((DbContextOptionsBuilder<DatabaseContext>)options, databaseConfig.FullConnectionString));
-builder.Services.AddScoped<IDatabaseContextFactory<DatabaseContext>>(_ => new DatabaseContextFactory(databaseConfig.FullConnectionString));
-
 builder.Services.AddScoped<IDatabaseContextFactory<DatabaseContext>>(_ => new DatabaseContextFactory(databaseConfig.FullConnectionString));
 
 //Add services and repositories here
@@ -98,8 +95,20 @@ var app = builder.Build();
 app.UseDeveloperExceptionPage();
 if (swaggerConfig is { IsEnabled: true })
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var swaggerRoutePrefix = string.IsNullOrWhiteSpace(swaggerConfig.EndpointPrefix) 
+        ? "swagger" 
+        : $"{swaggerConfig.EndpointPrefix.Trim('/')}/swagger";
+    
+    app.UseSwagger(c =>
+    {
+        c.RouteTemplate = $"{swaggerRoutePrefix}/{{documentName}}/swagger.json";
+    });
+    
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint($"/{swaggerRoutePrefix}/v1/swagger.json", "API v1");
+        c.RoutePrefix = swaggerRoutePrefix;
+    });
 }
 
 app.UseHealthChecks("/health");

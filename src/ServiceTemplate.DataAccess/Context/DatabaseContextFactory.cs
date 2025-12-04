@@ -21,7 +21,14 @@ public class DatabaseContextFactory : IDatabaseContextFactory<DatabaseContext>
                 DatabaseContext.DefaultSchema
             ));
         optionsBuilder.UseSnakeCaseNamingConvention();
-        optionsBuilder.EnableSensitiveDataLogging();
+
+        // Only enable sensitive data logging in Development environment
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        if (string.Equals(environment, "Development", StringComparison.OrdinalIgnoreCase))
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+        }
+
         return new DatabaseContext(optionsBuilder.Options);
     }
     
@@ -33,7 +40,14 @@ public class DatabaseContextFactory : IDatabaseContextFactory<DatabaseContext>
                 DatabaseContext.DefaultSchema
             ));
         optionsBuilder.UseSnakeCaseNamingConvention();
-        optionsBuilder.EnableSensitiveDataLogging();
+
+        // Only enable sensitive data logging in Development environment
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        if (string.Equals(environment, "Development", StringComparison.OrdinalIgnoreCase))
+        {
+            optionsBuilder.EnableSensitiveDataLogging();
+        }
+
         return new DatabaseContext(optionsBuilder.Options);
     }
 }
