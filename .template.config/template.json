@@ -111,6 +111,12 @@
             "path": "src/ServiceTemplate.Api/ServiceTemplate.Api.csproj"
         },
         {
+            "path": "src/ServiceTemplate.Application/ServiceTemplate.Application.csproj"
+        },
+        {
+            "path": "src/ServiceTemplate.Domain/ServiceTemplate.Domain.csproj"
+        },
+        {
             "path": "src/ServiceTemplate.Infrastructure/ServiceTemplate.Infrastructure.csproj"
         },
         {

@@ -1,9 +1,3 @@
-/Host/[Bb]in/
-/Host/[Oo]bj/
-/ServiceTemplate.DataAccess/bin/
-/ServiceTemplate.DataAccess/[Oo]bj/
-/ServiceTemplate.DataContracts/[Bb]in/
-/ServiceTemplate.DataContracts/[Oo]bj/
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml

@@ -8,6 +8,9 @@
     <!-- Security: pin vulnerable transitive dependencies -->
     <PackageVersion Include="System.Security.Cryptography.Xml" Version="9.0.15" />
 
+    <!-- DI primitives (shared across layers) -->
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.1" />
+
     <!-- EF Core / PostgreSQL -->
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Proxies" Version="10.0.0" />
