@@ -1,26 +1,37 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
+﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble AS base
 WORKDIR /app
-EXPOSE 80
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:8080
+ENV DOTNET_EnableDiagnostics=0
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Production
+FROM mcr.microsoft.com/dotnet/sdk:10.0-noble AS build
+ARG BUILD_CONFIGURATION=Release
 
-# Copy all remaining project files and folders
-COPY ./ /src/
+# Restore cache-friendly layer
+WORKDIR /src
+COPY Directory.Build.props ./
+COPY Directory.Packages.props ./
+COPY global.json ./
+COPY src/ServiceTemplate.Api/ServiceTemplate.Api.csproj src/ServiceTemplate.Api/
+COPY src/ServiceTemplate.Application/ServiceTemplate.Application.csproj src/ServiceTemplate.Application/
+COPY src/ServiceTemplate.Contracts/ServiceTemplate.Contracts.csproj src/ServiceTemplate.Contracts/
+COPY src/ServiceTemplate.Domain/ServiceTemplate.Domain.csproj src/ServiceTemplate.Domain/
+COPY src/ServiceTemplate.Infrastructure/ServiceTemplate.Infrastructure.csproj src/ServiceTemplate.Infrastructure/
+RUN dotnet restore src/ServiceTemplate.Api/ServiceTemplate.Api.csproj
 
-WORKDIR /src/src/Host
+COPY . .
 
-RUN dotnet restore "Host.csproj"
+WORKDIR /src/src/ServiceTemplate.Api
 
 # Build the project
-RUN dotnet build "Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "ServiceTemplate.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Production
-RUN dotnet publish "Host.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "ServiceTemplate.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Host.dll"]
+USER $APP_UID
+ENTRYPOINT ["dotnet", "ServiceTemplate.Api.dll"]
