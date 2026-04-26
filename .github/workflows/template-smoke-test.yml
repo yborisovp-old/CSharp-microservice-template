@@ -1,0 +1,37 @@
+name: Template smoke test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install template
+        run: dotnet new install .
+
+      - name: Generate project from template
+        run: dotnet new microservice -n SampleService -o ./tmp/SampleService
+
+      - name: Restore
+        run: dotnet restore ./tmp/SampleService
+
+      - name: Build
+        run: dotnet build ./tmp/SampleService --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test ./tmp/SampleService --configuration Release --no-build
+
+      - name: Docker build
+        run: docker build -t sample-service ./tmp/SampleService
+

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>ServiceTemplate.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ServiceTemplate.Domain\ServiceTemplate.Domain.csproj" />
+    <ProjectReference Include="..\ServiceTemplate.Contracts\ServiceTemplate.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
