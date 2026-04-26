@@ -4,7 +4,7 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
-
+.DS_Store
 .tmp/
 # AWS User-specific
 .idea/**/aws.xml

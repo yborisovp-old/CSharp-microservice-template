@@ -8,12 +8,13 @@ namespace ServiceTemplate.Api.Observability;
 
 public static class ObservabilityExtensions
 {
-    public static readonly ActivitySource ActivitySource = new("ServiceTemplate");
+    public static readonly ActivitySource ActivitySource = new(TelemetryConstants.ActivitySourceName);
 
     public static WebApplicationBuilder AddServiceObservability(this WebApplicationBuilder builder)
     {
         var serviceName = builder.Configuration["Service:Name"]
             ?? builder.Environment.ApplicationName;
+        var environment = builder.Environment.EnvironmentName;
         var serviceVersion = typeof(Program).Assembly.GetName().Version?.ToString()
             ?? "unknown";
 
@@ -23,14 +24,21 @@ public static class ObservabilityExtensions
             logging.IncludeScopes = true;
             logging.ParseStateValues = true;
             logging.SetResourceBuilder(ResourceBuilder.CreateDefault()
-                .AddService(serviceName: serviceName, serviceVersion: serviceVersion));
+                .AddService(serviceName: serviceName, serviceVersion: serviceVersion)
+                .AddAttributes([
+                    new KeyValuePair<string, object>("deployment.environment", environment)
+                ]));
             logging.AddOtlpExporter();
         });
 
         builder.Services.AddOpenTelemetry()
             .ConfigureResource(resource =>
             {
-                resource.AddService(serviceName: serviceName, serviceVersion: serviceVersion);
+                resource
+                    .AddService(serviceName: serviceName, serviceVersion: serviceVersion)
+                    .AddAttributes([
+                        new KeyValuePair<string, object>("deployment.environment", environment)
+                    ]);
             })
             .WithTracing(tracing =>
             {
@@ -47,7 +55,7 @@ public static class ObservabilityExtensions
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
-                    .AddMeter("ServiceTemplate")
+                    .AddMeter(TelemetryConstants.MeterName)
                     .AddPrometheusExporter();
             });
 
